@@ -631,7 +631,6 @@ def compareBaseline(albedo, mesh_df, coverset, baseline, snr_th=100, bins=21):
     binranges = [[0, 5], [0, 600], [0, 90], [0, 90]]
     error = calc_set_err(albedo, mesh_df, coverset)
     quality_passed = error[error['SNR'] > snr_th]
-    baseline['time'] = coverset['time'].copy()
     base_error = calc_set_err(albedo, mesh_df, baseline)
     base_quality_passed = base_error[base_error['SNR'] > snr_th]
     #convert latlon coords to matrix indices within (-130, -50, -30, 50) = (minlon, minlat, maxlon, maxlat)

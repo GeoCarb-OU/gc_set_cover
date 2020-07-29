@@ -380,6 +380,7 @@ if __name__=='__main__':
     ## RUN DIAGNOSTIC
     if compareToBaseline:
         baseline = pd.read_pickle(baseline)
+        baseline['time'] = timewindow[:len(baseline)]
         fig = compareBaseline(alb_map, cost_mesh, coverset, baseline)
         plt.savefig(directory +'diagnostics_coverset_vs_baseline_'+timewindow[0].strftime('%Y-%m-%d.png'))
         plt.close()
