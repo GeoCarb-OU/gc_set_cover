@@ -63,7 +63,7 @@ compareToBaseline = menu.compareToBaseline
 ##====gc_main_menu defined vars====END
 
 ##====included files=======
-candidateBlocks = '../scan_blocks_5min_pruned.pkl'
+candidateBlocks = 'scan_blocks_5min_pruned.pkl'
 baseline = 'baseline_covering_set_pandas.pkl'
 meshgridSaveFid = 'meshgrid.pkl'
 afWindowSaveFid = f'af_window_{year}{month:02}{day}.pkl'
@@ -284,7 +284,7 @@ if __name__=='__main__':
                         interest=areaOfInterest,
                         precip=cloudProbabilityMap,
                         reservations=reservedScanBlocks,
-                        tol=0.01,
+                        tol=universeCoverageTol,
                         setmax=len(timewindow),
                         weights=(weightDistPenalty, weightOverlapPenalty),
                         dist_thr=distanceThreshold)
@@ -300,7 +300,7 @@ if __name__=='__main__':
                         precip=cloudProbabilityMap,
                         reservations=reservedScanBlocks,
                         t=len(cover_sam),
-                        tol=.01,
+                        tol=universeCoverageTol,
                         setmax=len(timewindow)-len(cover_sam),
                         weights=(weightDistPenalty, weightOverlapPenalty),
                         dist_thr=distanceThreshold)
@@ -308,7 +308,7 @@ if __name__=='__main__':
     coverset = gpd.GeoDataFrame({},crs=geo_proj4)
     coverset = coverset.append([cover_sam, cover_nam]).reset_index(drop=True)
     coverset['time'] = timewindow[:len(coverset)]
-    coverset = coverset[['time', 'centroid_lat_lon', 'geometry']]
+    coverset = coverset[['time', 'centroid_lat_lon', 'geometry', 'footprint_centroids']]
 
     ## SAVE OUTPUTS
     if directory is None:
@@ -339,12 +339,12 @@ if __name__=='__main__':
                                         precip=cloudProbabilityMap,
                                         reservations=reservedScanBlocks,
                                         t=len(coverset),
-                                        tol=.01,
+                                        tol=universeCoverageTol,
                                         setmax=len(timewindow)-len(coverset),
                                         weights=(weightDistPenalty, weightOverlapPenalty),
                                         dist_thr=distanceThreshold)
         coverset_extra['time'] = timewindow[len(coverset):]
-        coverset_extra = coverset_extra[['time', 'centroid_lat_lon', 'geometry']]
+        coverset_extra = coverset_extra[['time', 'centroid_lat_lon', 'geometry', 'footprint_centroids']]
         #save outputs
         print('Saving extra scan blocks.')
         coversetExtraSaveFid = directory+'coverset_extra_'+timewindow[0].strftime('%Y%m%d_%H%M')+'_pandas.pkl'
