@@ -17,7 +17,6 @@ import geopandas as gpd
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
 from descartes.patch import PolygonPatch
-import seaborn as sns
 import multiprocessing as mp
 import os
 import warnings
@@ -84,7 +83,7 @@ if __name__=='__main__':
     modis = Dataset(nc_alb, 'r')
     alb_map = modis.variables[f'{year}{month:02}{day}'][:]
         #MODIS data is oriented (x,y) = (0,0) at bottom left corner
-
+    modis.close()
     ## LOAD CANDIDATE BLOCKSET
     if scanBlockGeoms is None:
         blockset = pd.read_pickle(candidateBlocks)
@@ -284,7 +283,7 @@ if __name__=='__main__':
                         interest=areaOfInterest,
                         precip=cloudProbabilityMap,
                         reservations=reservedScanBlocks,
-                        tol=universeCoverageTol,
+                        tol=universeCoverageTol/2,
                         setmax=len(timewindow),
                         weights=(weightDistPenalty, weightOverlapPenalty),
                         dist_thr=distanceThreshold)
@@ -300,7 +299,7 @@ if __name__=='__main__':
                         precip=cloudProbabilityMap,
                         reservations=reservedScanBlocks,
                         t=len(cover_sam),
-                        tol=universeCoverageTol,
+                        tol=universeCoverageTol/2,
                         setmax=len(timewindow)-len(cover_sam),
                         weights=(weightDistPenalty, weightOverlapPenalty),
                         dist_thr=distanceThreshold)
